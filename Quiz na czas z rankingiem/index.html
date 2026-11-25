@@ -5,17 +5,193 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-4.0.0.min.js" integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
     <script>
     $(function(){
         
+  const pytania = [
+    {
+        "pytanie": "Jaka jest stolica Francji?",
+        "odpowiedzi": ["Berlin", "Paryż", "Madryt", "Rzym"],
+        "poprawna_indeks": 1
+    },
+    {
+        "pytanie": "Jaka jest stolica Niemiec?",
+        "odpowiedzi": ["Monachium", "Hamburg", "Berlin", "Bonn"],
+        "poprawna_indeks": 2
+    },
+    {
+        "pytanie": "Jaka jest stolica Włoch?",
+        "odpowiedzi": ["Rzym", "Mediolan", "Neapol", "Wenecja"],
+        "poprawna_indeks": 0
+    },
+    {
+        "pytanie": "Jaka jest stolica Hiszpanii?",
+        "odpowiedzi": ["Barcelona", "Walencja", "Sewilla", "Madryt"],
+        "poprawna_indeks": 3
+    },
+    {
+        "pytanie": "Jaka jest stolica Portugalii?",
+        "odpowiedzi": ["Porto", "Lizbona", "Braga", "Faro"],
+        "poprawna_indeks": 1
+    },
+    {
+        "pytanie": "Jaka jest stolica Norwegii?",
+        "odpowiedzi": ["Bergen", "Trondheim", "Oslo", "Stavanger"],
+        "poprawna_indeks": 2
+    },
+    {
+        "pytanie": "Jaka jest stolica Szwecji?",
+        "odpowiedzi": ["Sztokholm", "Göteborg", "Malmö", "Uppsala"],
+        "poprawna_indeks": 0
+    },
+    {
+        "pytanie": "Jaka jest stolica Finlandii?",
+        "odpowiedzi": ["Turku", "Tampere", "Oulu", "Helsinki"],
+        "poprawna_indeks": 3
+    },
+    {
+        "pytanie": "Jaka jest stolica Grecji?",
+        "odpowiedzi": ["Saloniki", "Ateny", "Patras", "Heraklion"],
+        "poprawna_indeks": 1
+    },
+    {
+        "pytanie": "Jaka jest stolica Czech?",
+        "odpowiedzi": ["Brno", "Ostrawa", "Praga", "Pilzno"],
+        "poprawna_indeks": 2
+    },
+    {
+        "pytanie": "Jaka jest stolica Japonii?",
+        "odpowiedzi": ["Tokio", "Kioto", "Osaka", "Hiroshima"],
+        "poprawna_indeks": 0
+    },
+    {
+        "pytanie": "Jaka jest stolica Chin?",
+        "odpowiedzi": ["Szanghaj", "Hongkong", "Kanton", "Pekin"],
+        "poprawna_indeks": 3
+    },
+    {
+        "pytanie": "Jaka jest stolica Australii?",
+        "odpowiedzi": ["Sydney", "Canberra", "Melbourne", "Perth"],
+        "poprawna_indeks": 1
+    },
+    {
+        "pytanie": "Jaka jest stolica Kanady?",
+        "odpowiedzi": ["Toronto", "Vancouver", "Ottawa", "Montreal"],
+        "poprawna_indeks": 2
+    },
+    {
+        "pytanie": "Jaka jest stolica Brazylii?",
+        "odpowiedzi": ["Brasília", "Rio de Janeiro", "São Paulo", "Salvador"],
+        "poprawna_indeks": 0
+    },
+    {
+        "pytanie": "Jaka jest stolica Argentyny?",
+        "odpowiedzi": ["Cordoba", "Rosario", "Mendoza", "Buenos Aires"],
+        "poprawna_indeks": 3
+    },
+    {
+        "pytanie": "Jaka jest stolica Egiptu?",
+        "odpowiedzi": ["Aleksandria", "Kair", "Giza", "Luksor"],
+        "poprawna_indeks": 1
+    },
+    {
+        "pytanie": "Jaka jest stolica Turcji?",
+        "odpowiedzi": ["Stambuł", "Izmir", "Ankara", "Antalya"],
+        "poprawna_indeks": 2
+    },
+    {
+        "pytanie": "Jaka jest stolica Korei Południowej?",
+        "odpowiedzi": ["Seul", "Busan", "Incheon", "Daegu"],
+        "poprawna_indeks": 0
+    },
+    {
+        "pytanie": "Jaka jest stolica Islandii?",
+        "odpowiedzi": ["Akureyri", "Kópavogur", "Hafnarfjörður", "Reykjavík"],
+        "poprawna_indeks": 3
+    }
+];
+
+    
+        const tablica = ["#odp1", "#odp2", "#odp3", "#odp4"];
+    $("#przyciskLosuj").on("click", function(){
+
+    $(".active").prop("hidden", false);
+
+    $("#polePytanie").empty();
+
+    let wylosowaneIndeksy = [];
+
+    for(let i = 0; i < 10; i++){
+
+        let losowyIndeks = Math.floor(Math.random() * pytania.length);
+        let powtorzenie = false;
+
+        for(let j = 0; j < wylosowaneIndeksy.length; j++){
+            if(wylosowaneIndeksy[j] == losowyIndeks){
+                powtorzenie = true;
+            }
+        }
+
+        while(powtorzenie == true){
+
+            losowyIndeks = Math.floor(Math.random() * pytania.length);
+            powtorzenie = false;
+
+            for(let j = 0; j < wylosowaneIndeksy.length; j++){
+                if(wylosowaneIndeksy[j] == losowyIndeks){
+                    powtorzenie = true;
+                }
+            }
+        }
+
+        wylosowaneIndeksy[i] = losowyIndeks;
+
+        let losowePytanie = pytania[losowyIndeks];
+
+        $("#polePytanie").append("<h3>" + (i + 1) + ". " + losowePytanie.pytanie + "</h3>");
+
+        for(let j = 0; j < 4; j++){
+
+        $("#polePytanie").append(
+            "<div class='d-flex justify-content-center' style='font-size: 16px;'>" +
+            "<div class='text-start'>" +
+            "<label>" +
+            "<input type='radio' name='odp" + i + "' value='" + j + "'>" +
+            " " + losowePytanie.odpowiedzi[j] +
+            "</label>" +
+            "</div>" +
+            "</div>"
+        );
+
+}
+
+        $("#polePytanie").append("<hr>");
+
+    }
+
+});
+
+
     
         
     });
     </script>
 </head>
 <body>
+
+    <div class="container-fluid text-center">
+        <button id="przyciskLosuj" class="btn btn-primary">Losuj pytanie</button>
+        <br>
+        <div class="container-fluid active" hidden>
+            <h1 id="polePytanie"></h1>
+        </div>
+
+    </div>
+    
+
       
- 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script> 
 </body>
 </html>
