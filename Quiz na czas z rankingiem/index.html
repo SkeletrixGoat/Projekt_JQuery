@@ -203,13 +203,18 @@ function pokazPytanie(){
         if(parseInt($(this).val()) == losowePytanie.poprawna_indeks){
 
             wynik += 10 + czasPozostaly;
-
-
+ 
+        }else{
+            $(this).parent().addClass("zle")
         }
+        $("#polePytanie input[name='odp'][value='" + losowePytanie.poprawna_indeks + "']").parent().addClass("dobrze");
+        setTimeout(function(){
+           numerPytania++;
 
-        numerPytania++;
+            pokazPytanie();
 
-        pokazPytanie();
+        }, 2000);
+        
 
     });
 
@@ -272,6 +277,11 @@ function pokazPytanie(){
         
     });
     </script>
+     <style>
+            body { font-family: Arial, sans-serif; max-width: 640px; margin: 25px auto; }
+            .dobrze { background-color: green; font-weight: bold; }
+            .zle { background-color: red; font-weight: bold; }
+        </style>
 </head>
 <body>
 
