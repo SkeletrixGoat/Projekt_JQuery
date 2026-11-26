@@ -114,62 +114,156 @@
 ];
 
     
-        const tablica = ["#odp1", "#odp2", "#odp3", "#odp4"];
-    $("#przyciskLosuj").on("click", function(){
+       let wylosowaneIndeksy = [];
+let numerPytania = 0;
+let wynik = 0;
+let timer;
+let czasPozostaly = 15;
 
-    $(".active").prop("hidden", false);
+function pokazPytanie(){
 
-    $("#polePytanie").empty();
+    if(numerPytania >= 10){
 
-    let wylosowaneIndeksy = [];
+        clearInterval(timer);
 
-    for(let i = 0; i < 10; i++){
+        $("#polePytanie").prop("hidden", true);
 
-        let losowyIndeks = Math.floor(Math.random() * pytania.length);
-        let powtorzenie = false;
+        $("#poleWynik").prop("hidden", false);
 
-        for(let j = 0; j < wylosowaneIndeksy.length; j++){
-            if(wylosowaneIndeksy[j] == losowyIndeks){
-                powtorzenie = true;
-            }
-        }
+        $("#wynik").text("Twój wynik: " + wynik + "/250");
 
-        while(powtorzenie == true){
+        $("#licznikCzasu").text("0");
+        $("#pasekCzasu").css("width", "0%");
 
-            losowyIndeks = Math.floor(Math.random() * pytania.length);
-            powtorzenie = false;
+        return;
+    }
 
-            for(let j = 0; j < wylosowaneIndeksy.length; j++){
-                if(wylosowaneIndeksy[j] == losowyIndeks){
-                    powtorzenie = true;
-                }
-            }
-        }
+    let losowePytanie = pytania[wylosowaneIndeksy[numerPytania]];
 
-        wylosowaneIndeksy[i] = losowyIndeks;
+    $("#polePytanie").text("");
 
-        let losowePytanie = pytania[losowyIndeks];
+    $("#polePytanie").append(
+        "<h3>" + (numerPytania + 1) + ". " + losowePytanie.pytanie + "</h3>"
+    );
 
-        $("#polePytanie").append("<h3>" + (i + 1) + ". " + losowePytanie.pytanie + "</h3>");
-
-        for(let j = 0; j < 4; j++){
+    for(let j = 0; j < 4; j++){
 
         $("#polePytanie").append(
-            "<div class='d-flex justify-content-center' style='font-size: 16px;'>" +
-            "<div class='text-start'>" +
+            "<div class='d-flex justify-content-center'>" +
+            "<div class='text-start' style='font-size: 16px;'>" +
             "<label>" +
-            "<input type='radio' name='odp" + i + "' value='" + j + "'>" +
+            "<input type='radio' name='odp' value='" + j + "'>" +
             " " + losowePytanie.odpowiedzi[j] +
             "</label>" +
             "</div>" +
             "</div>"
         );
 
+    }
+
+    let czas = 15;
+    czasPozostaly = 15;
+
+    $("#licznikCzasu").text(czas);
+
+    $("#pasekCzasu").css("transition", "none");
+    $("#pasekCzasu").css("width", "100%");
+
+    timer = setInterval(function(){
+
+        czas--;
+        czasPozostaly--;
+
+        $("#licznikCzasu").text(czas);
+
+        $("#pasekCzasu").css("transition", "width 1s linear");
+        $("#pasekCzasu").css("width", (czas / 15 * 100) + "%");
+
+        if(czas <= 0){
+
+            clearInterval(timer);
+
+            numerPytania++;
+
+            pokazPytanie();
+
+        }
+
+    }, 1000);
+
 }
 
-        $("#polePytanie").append("<hr>");
 
-    }
+    $("#polePytanie").on("change", "input[name='odp']", function(){
+
+        clearInterval(timer);
+
+        let losowePytanie = pytania[wylosowaneIndeksy[numerPytania]];
+
+        if(parseInt($(this).val()) == losowePytanie.poprawna_indeks){
+
+            wynik += 10 + czasPozostaly;
+
+
+        }
+
+        numerPytania++;
+
+        pokazPytanie();
+
+    });
+
+
+    $("#przyciskLosuj").on("click", function(){
+
+            clearInterval(timer);
+
+            $(".active").prop("hidden", false); 
+
+            $("#polePytanie").prop("hidden", false);
+            $("#poleWynik").prop("hidden", true);
+
+            wylosowaneIndeksy = [];
+
+            numerPytania = 0;
+            wynik = 0;
+
+
+
+
+        for(let i = 0; i < 10; i++){
+
+            let losowyIndeks = Math.floor(Math.random() * pytania.length);
+            let powtorzenie = false;
+
+            for(let j = 0; j < wylosowaneIndeksy.length; j++){
+
+                if(wylosowaneIndeksy[j] == losowyIndeks){
+                    powtorzenie = true;
+                }
+
+            }
+
+            while(powtorzenie == true){
+
+                losowyIndeks = Math.floor(Math.random() * pytania.length);
+                powtorzenie = false;
+
+                for(let j = 0; j < wylosowaneIndeksy.length; j++){
+
+                    if(wylosowaneIndeksy[j] == losowyIndeks){
+                        powtorzenie = true;
+                    }
+
+                }
+
+            }
+
+            wylosowaneIndeksy[i] = losowyIndeks;
+
+        }
+
+        pokazPytanie();
 
 });
 
@@ -185,8 +279,23 @@
         <button id="przyciskLosuj" class="btn btn-primary">Losuj pytanie</button>
         <br>
         <div class="container-fluid active" hidden>
-            <h1 id="polePytanie"></h1>
-        </div>
+
+            <div class="progress mt-3 mb-2" style="height: 10px;">
+                <div id="pasekCzasu" class="progress-bar"
+                    style="width: 100%; transition: width 1s linear;">
+                </div>
+            </div>
+
+            <p>Pozostały czas: <span id="licznikCzasu">15</span> sekund</p>
+
+            <div id="polePytanie"></div>
+
+            <div id="poleWynik" hidden>
+                <h2>Koniec quizu!</h2>
+                <h3 id="wynik"></h3>
+            </div>
+
+    </div>
 
     </div>
     
